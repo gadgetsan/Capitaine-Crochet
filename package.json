@@ -1,14 +1,17 @@
 {
-  "name": "capitaine-crochet",
-  "version": "1.0.0",
-  "description": "Juste une petite application serveur pour pouvoir executer des tâches avec des webhooks",
-  "main": "src/index.js",
-  "scripts": {
-    "start": "nodemon src/index.js"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "nodemon": "1.18.4"
-  },
-  "keywords": []
+    "name": "capitaine-crochet",
+    "version": "1.0.0",
+    "description": "a simple web app to add some functionality to IFTTT and Coda",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "node src/index.js"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "nodemon": "latest"
+    },
+    "engines": {
+        "node": "10.17.0"
+    },
+    "keywords": []
 }
