@@ -7,10 +7,12 @@ router.get("/addGroceryElement/" + process.env.HOOK_CODE, function(req, res) {
         //on doit enlever le texte excedentaire que l'assistant ajoute parfois.
         var toAdd = req.query.name;
         toAdd = toAdd
-            .replace(" des ", "")
-            .replace(" du ", "")
-            .replace(" un ", "")
+            .toLowerCase()
+            .replace("des ", "")
+            .replace("du ", "")
+            .replace("un ", "")
             .replace(" a", "")
+            .replace(" à", "")
             .replace(" la", "")
             .replace(" ma", "");
         toAdd = helpers.capitalize(toAdd, true);

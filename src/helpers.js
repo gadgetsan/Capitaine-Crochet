@@ -1,4 +1,4 @@
-var Coda = require("coda-js").Coda;
+const { Coda } = require("coda-js");
 
 exports.formatDate = function(date) {
     var d = new Date(date),
