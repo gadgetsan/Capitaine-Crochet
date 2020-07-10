@@ -32,6 +32,11 @@ var app = express();
 //});
 //create a server object:
 //server.listen(process.env.PORT); //the server object listens on port 8080
+
+app.get("/", function(req, res) {
+  res.send("Hello World!");
+});
+
 app.use("/coda", codaCtrl);
 
-app.listen(process.env.PORT || 5000);
+app.listen(5000);

@@ -1,17 +1,14 @@
 {
-    "name": "capitaine-crochet",
-    "version": "1.0.0",
-    "description": "a simple web app to add some functionality to IFTTT and Coda",
-    "main": "src/index.js",
-    "scripts": {
-        "start": "node src/index.js"
-    },
-    "dependencies": {
-        "coda-js": "3.0.0",
-        "express": "4.17.1"
-    },
-    "devDependencies": {
-        "nodemon": "latest"
-    },
-    "keywords": []
+  "name": "capitaine-crochet",
+  "version": "1.0.1",
+  "description": "a simple web app to add some functionality to IFTTT and Coda",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "coda-js": "3.0.0",
+    "express": "4.17.1"
+  },
+  "keywords": []
 }
