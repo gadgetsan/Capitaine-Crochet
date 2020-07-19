@@ -51,7 +51,7 @@ router.get("/fetchMediaMeta/" + process.env.HOOK_CODE, function(req, res) {
   );
 });
 
-router.get("/addLink/" + process.env.HOOK_CODE, function(req, res) {
+router.post("/addLink/" + process.env.HOOK_CODE, function(req, res) {
   if (req.query.url) {
     //idéalement, je devrais faire linker...
     helpers.addLink(req.query.url).then(function() {
