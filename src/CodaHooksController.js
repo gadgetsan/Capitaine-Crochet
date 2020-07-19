@@ -2,6 +2,8 @@ var express = require("express");
 var helpers = require("./helpers");
 var router = express.Router();
 
+//API pour availability: JUSTWATCH (GoWatchit)
+
 router.get("/addGroceryElement/" + process.env.HOOK_CODE, function(req, res) {
   if (req.query.name) {
     //on doit enlever le texte excedentaire que l'assistant ajoute parfois.
@@ -24,8 +26,6 @@ router.get("/addGroceryElement/" + process.env.HOOK_CODE, function(req, res) {
   } else {
     res.status(500).send("you have to specify a name");
   }
-
-  res.send("fin de Hook!: " + JSON.stringify(req.query));
 });
 
 router.get("/test", function(req, res) {
@@ -49,6 +49,18 @@ router.get("/fetchMediaMeta/" + process.env.HOOK_CODE, function(req, res) {
       res.status(500).send("ERROR: " + err.message);
     }
   );
+});
+
+router.get("/addLink/" + process.env.HOOK_CODE, function(req, res) {
+  if (req.query.url) {
+    //idéalement, je devrais faire linker...
+    helpers.addLink(req.query.url).then(function() {
+      console.log("added new url: " + req.query.url);
+      res.send("added new url: " + req.query.url);
+    });
+  } else {
+    res.status(500).send("you have to specify an url");
+  }
 });
 
 module.exports = router;

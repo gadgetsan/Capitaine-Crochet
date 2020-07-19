@@ -282,3 +282,14 @@ exports.addCoverToGames = async function() {
   }
   return updatedGames;
 };
+
+exports.addLink = async function(url) {
+  var coda = new Coda(process.env.CODA_KEY);
+
+  const doc = await coda.getDoc(process.env.HOME_DOC_ID);
+  const table = await doc.getTable(process.env.LINKS_TABLE_ID);
+  //creating object to add
+  var toAdd = {};
+  toAdd[process.env.LINKS_URL_COLUMN] = url;
+  await table.insertRows([toAdd]);
+};
