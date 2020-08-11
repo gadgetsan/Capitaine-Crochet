@@ -57,7 +57,7 @@ exports.capitalize = (str, lower = false) =>
 async function getMedias() {
   try {
     var coda = await new Coda(process.env.CODA_KEY);
-    const doc = await coda.getDoc(process.env.HOME_DOC_ID);
+    const doc = await coda.getDoc(process.env.MEDIA_DOC_ID);
     const table = await doc.getTable(process.env.MEDIA_TABLE_ID);
     const rows = await table.listRows({ useColumnNames: false });
     //console.log("Fetched medias from Coda");
