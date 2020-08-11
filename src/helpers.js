@@ -1,15 +1,19 @@
 const { Coda } = require("coda-js");
 const https = require("https");
 
-exports.requestAsync = async function(options, body = "") {
+exports.requestAsync = async function (options, body = "{}") {
   return new Promise((resolve, reject) => {
     //console.dir(options);
-    var post_req = https.request(options, res => {
+    var post_req = https.request(options, (res) => {
       res.setEncoding("utf8");
-      res.on("data", chunk => {
-        resolve(chunk);
+      var data = "";
+      res.on("data", (chunk) => {
+        data += chunk;
       });
-      res.on("error", err => {
+      res.on("end", () => {
+        resolve(data);
+      });
+      res.on("error", (err) => {
         reject(err);
       });
     });
@@ -18,7 +22,7 @@ exports.requestAsync = async function(options, body = "") {
   });
 };
 
-exports.formatDate = function(date) {
+exports.formatDate = function (date) {
   var d = new Date(date),
     month = "" + (d.getMonth() + 1),
     day = "" + d.getDate(),
@@ -32,7 +36,7 @@ exports.formatDate = function(date) {
   return [year, month, day].join("-") + ", " + hours + ":" + minutes;
 };
 
-exports.addGroceryElement = async function(elementName) {
+exports.addGroceryElement = async function (elementName) {
   var coda = new Coda(process.env.CODA_KEY);
   var d = new Date();
 
@@ -46,7 +50,7 @@ exports.addGroceryElement = async function(elementName) {
 };
 
 exports.capitalize = (str, lower = false) =>
-  (lower ? str.toLowerCase() : str).replace(/(?:^|\s|["'([{])+\S/g, match =>
+  (lower ? str.toLowerCase() : str).replace(/(?:^|\s|["'([{])+\S/g, (match) =>
     match.toUpperCase()
   );
 
@@ -138,7 +142,7 @@ async function getMovieMetaData(movieName) {
   }
 }
 
-var getGameCoverUrl = async function(gameName) {
+var getGameCoverUrl = async function (gameName) {
   try {
     var options_games = {
       host: "api-v3.igdb.com",
@@ -181,7 +185,7 @@ var getGameCoverUrl = async function(gameName) {
   }
 };
 
-exports.getshowImage = async function(showName) {
+exports.getshowImage = async function (showName) {
   try {
     var options_login = {
       host: "api.thetvdb.com",
@@ -231,7 +235,7 @@ exports.getshowImage = async function(showName) {
   }
 };
 
-exports.addPosterToMovies = async function() {
+exports.addPosterToMovies = async function () {
   var movies = await getMovies();
   var updatedMovies = [];
 
@@ -257,7 +261,7 @@ exports.addPosterToMovies = async function() {
   return updatedMovies;
 };
 
-exports.addCoverToGames = async function() {
+exports.addCoverToGames = async function () {
   var games = await getGames();
   var updatedGames = [];
 
@@ -283,7 +287,7 @@ exports.addCoverToGames = async function() {
   return updatedGames;
 };
 
-exports.addLink = async function(url) {
+exports.addLink = async function (url) {
   var coda = new Coda(process.env.CODA_KEY);
 
   const doc = await coda.getDoc(process.env.HOME_DOC_ID);
@@ -291,5 +295,91 @@ exports.addLink = async function(url) {
   //creating object to add
   var toAdd = {};
   toAdd[process.env.LINKS_URL_COLUMN] = url;
+  await table.insertRows([toAdd]);
+};
+
+exports.addHabiticaTask = async function (name) {
+  var options = {
+    host: "habitica.com",
+    path: "/api/v3/tasks/user",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-client": process.env.HABITICA_USER_ID + "_CapitaineCrochetDev",
+      "x-api-user": process.env.HABITICA_USER_ID,
+      "x-api-key": process.env.HABITICA_API_TOKEN
+    }
+  };
+  var body = {
+    text: name,
+    type: "todo"
+  };
+
+  try {
+    // console.log("starting Request");
+    var rawResponse = await exports.requestAsync(options, JSON.stringify(body));
+    //console.log(rawResponse);
+    var response = JSON.parse(rawResponse);
+    return response.data.id;
+  } catch (e) {
+    console.error("Error while adding Habitica Task: " + e.message);
+  }
+};
+
+exports.updateHabiticaTask = async function (id, name) {
+  var options = {
+    host: "habitica.com",
+    path: "/api/v3/tasks/user/" + id,
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "x-client": process.env.HABITICA_USER_ID + "_CapitaineCrochetDev",
+      "x-api-user": process.env.HABITICA_USER_ID,
+      "x-api-key": process.env.HABITICA_API_TOKEN
+    }
+  };
+  var body = {
+    text: name
+  };
+
+  try {
+    // console.log("starting Request");
+    var rawResponse = await exports.requestAsync(options, JSON.stringify(body));
+    //console.log(rawResponse);
+    var response = JSON.parse(rawResponse);
+    return response.data;
+  } catch (e) {
+    console.error("Error while updating Habitica Task: " + e.message);
+  }
+};
+exports.updateCodaTask = async function getCodaTask(todoistId, newName) {
+  try {
+    var coda = await new Coda(process.env.CODA_KEY);
+    const doc = await coda.getDoc(process.env.HOME_DOC_ID);
+    const table = await doc.getTable(process.env.TASK_TABLE_ID);
+    const rows = await table.listRows({
+      query: process.env.TASK_TODOIST_ID_COLUMN + ':"' + todoistId + '"'
+    });
+    //console.log("Fetched medias from Coda");
+    //console.log(JSON.stringify(rows));
+    var updateObj = {};
+    updateObj[process.env.TASK_NAME_COLUMN] = newName;
+    await rows[0].update(updateObj);
+    return rows[0];
+  } catch (e) {
+    console.error("Error while fetching Medias: " + e.message);
+  }
+};
+
+exports.addTaskToCoda = async function (taskName, todoistId, habiticaId) {
+  var coda = new Coda(process.env.CODA_KEY);
+
+  const doc = await coda.getDoc(process.env.HOME_DOC_ID);
+  const table = await doc.getTable(process.env.TASK_TABLE_ID);
+  //creating object to add
+  var toAdd = {};
+  toAdd[process.env.TASK_NAME_COLUMN] = taskName;
+  toAdd[process.env.TASK_TODOIST_ID_COLUMN] = todoistId;
+  toAdd[process.env.TASK_HABITICA_ID_COLUMN] = habiticaId;
   await table.insertRows([toAdd]);
 };

@@ -1,5 +1,6 @@
 var express = require("express");
 var codaCtrl = require("./CodaHooksController");
+var todoistCtrl = require("./TodoistHooksController");
 
 //https://github.com/parker-codes/coda-js/issues/1
 
@@ -38,5 +39,7 @@ app.get("/", function(req, res) {
 });
 
 app.use("/coda", codaCtrl);
+
+app.use("/todoist", todoistCtrl);
 
 app.listen(process.env.PORT || 5000);

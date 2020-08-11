@@ -10,13 +10,13 @@ router.get("/addGroceryElement/" + process.env.HOOK_CODE, function(req, res) {
     var toAdd = req.query.name;
     toAdd = toAdd
       .toLowerCase()
-      .replace("des ", "")
-      .replace("du ", "")
-      .replace("un ", "")
-      .replace(" a", "")
-      .replace(" à", "")
-      .replace(" la", "")
-      .replace(" ma", "");
+      .replace(" des ", " ")
+      .replace(" du ", " ")
+      .replace(" un ", " ")
+      .replace(" a ", " ")
+      .replace(" à ", " ")
+      .replace(" la ", " ")
+      .replace(" ma ", " ");
     toAdd = helpers.capitalize(toAdd, true);
     //idéalement, je devrais faire linker...
     helpers.addGroceryElement(toAdd).then(function() {
