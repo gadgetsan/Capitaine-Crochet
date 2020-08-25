@@ -383,3 +383,13 @@ exports.addTaskToCoda = async function (taskName, todoistId, habiticaId) {
   toAdd[process.env.TASK_HABITICA_ID_COLUMN] = habiticaId;
   await table.insertRows([toAdd]);
 };
+
+exports.convertArrayToObject = (array, key) => {
+  const initialValue = {};
+  return array.reduce((obj, item) => {
+    return {
+      ...obj,
+      [item[key]]: item
+    };
+  }, initialValue);
+};

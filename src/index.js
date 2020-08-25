@@ -1,6 +1,7 @@
 var express = require("express");
 var codaCtrl = require("./CodaHooksController");
 var todoistCtrl = require("./TodoistHooksController");
+var YNABCtrl = require("./YNABHooksController");
 
 //https://github.com/parker-codes/coda-js/issues/1
 
@@ -34,12 +35,12 @@ var app = express();
 //create a server object:
 //server.listen(process.env.PORT); //the server object listens on port 8080
 
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.send("Hello World!");
 });
 
 app.use("/coda", codaCtrl);
-
 app.use("/todoist", todoistCtrl);
+app.use("/YNAB", YNABCtrl);
 
 app.listen(process.env.PORT || 5000);
