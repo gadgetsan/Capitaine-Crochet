@@ -47,7 +47,11 @@ router.get("/Export/" + process.env.HOOK_CODE, jsonParser, async function (
 			ynabAccount.balance / divider;
 		updateObj[process.env.ACCOUNT_INVALIDATED_AMMOUNT] =
 			(ynabAccount.cleared_balance - ynabAccount.balance) / divider;
-		await codaAccount.update(updateObj);
+		try {
+			await codaAccount.update(updateObj);
+		} catch (err) {
+			console.error("Problem updating account: " + err.message);
+		}
 	}
 
 	//UPDATE ACCOUNTS ENDS=============================================
