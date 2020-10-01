@@ -4,12 +4,16 @@
   "description": "a simple web app to add some functionality to IFTTT and Coda",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "nodemon src/index.js"
   },
   "dependencies": {
     "body-parser": "1.19.0",
     "coda-js": "4.0.0",
     "express": "4.17.1",
+    "got": "11.7.0",
+    "nodemon": "2.0.4",
+    "pg": "8.3.3",
+    "pg-connection-string": "2.3.0",
     "ynab": "1.20.0"
   },
   "keywords": []

@@ -393,3 +393,32 @@ exports.convertArrayToObject = (array, key) => {
     };
   }, initialValue);
 };
+
+exports.toTable = (array, queries) => {
+  var rows = [];
+  array.forEach((element) => {
+    var row = [];
+    queries.forEach((query) => {
+      row.push(query(element));
+    });
+    rows.push(row);
+  });
+  //console.dir(rows);
+  return rows;
+};
+
+exports.toHTMLTable = (array) => {
+  //on commence par le transformer en table
+  var tableString = "<table>";
+  array.forEach((row) => {
+    tableString += "<tr>";
+    row.forEach((cell) => {
+      tableString += "<td>";
+      tableString += cell;
+      tableString += "</td>";
+    });
+    tableString += "</tr>";
+  });
+  tableString += "</table>";
+  return tableString;
+};
