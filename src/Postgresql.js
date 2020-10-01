@@ -1,6 +1,9 @@
 const { Pool } = require("pg");
 class Postgresql {
   static async getSongsId(songsArray) {
+    if (songsArray.length === 0) {
+      return Promise.resolve([]);
+    }
     var mappedData = [];
     songsArray.forEach((s) => {
       if (mappedData[s[1]] === undefined) {
@@ -9,7 +12,9 @@ class Postgresql {
       mappedData[s[1]][s[0]] = s;
     });
     const pool = new Pool({
-      connectionString: process.env.SQL_STRING
+      connectionString: process.env.SQL_STRING,
+      max: 4,
+      idleTimeoutMillis: 5000
     });
     const client = await pool.connect();
     var insertQuery = "INSERT INTO Songs(name, artist) VALUES";
@@ -58,8 +63,13 @@ class Postgresql {
   }
 
   static async savePlayCounts(infoWithId, date) {
+    if (infoWithId.length === 0) {
+      return Promise.resolve([]);
+    }
     const pool = new Pool({
-      connectionString: process.env.SQL_STRING
+      connectionString: process.env.SQL_STRING,
+      max: 4,
+      idleTimeoutMillis: 5000
     });
     const client = await pool.connect();
     var upsertQuery =
@@ -99,7 +109,9 @@ class Postgresql {
 
   static async getLastUnfetchedDate() {
     const pool = new Pool({
-      connectionString: process.env.SQL_STRING
+      connectionString: process.env.SQL_STRING,
+      max: 4,
+      idleTimeoutMillis: 5000
     });
     const client = await pool.connect();
     var query = "SELECT * FROM datedata ORDER BY date";
@@ -125,7 +137,9 @@ class Postgresql {
 
   static async markAsFetched(date) {
     const pool = new Pool({
-      connectionString: process.env.SQL_STRING
+      connectionString: process.env.SQL_STRING,
+      max: 4,
+      idleTimeoutMillis: 5000
     });
     const client = await pool.connect();
     var query = "INSERT INTO datedata(date, gotfinalplaycount) VALUES($1, $2);";
